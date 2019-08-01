@@ -1,7 +1,8 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-
+    <input type="text" name="" v-model="sendmsg" placeholder="请输入你想发送的内容">
+    <button class="btn">开挖</button>
   </div>
 </template>
 
@@ -10,7 +11,40 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
-  }
+  },
+  data() {
+    return {
+      sendmsg: '',
+      ws: {}
+    }
+  },
+  mounted() {
+    this.ws = new WebSocket('ws://127.0.0.1:3000/ping')
+    // 连接打开时触发
+    this.ws.onopen = () => {  
+      console.log("Connection open ...") 
+    }
+    // 接收到消息时触发  
+    this.ws.onmessage = (evt) => { 
+      console.log(evt) 
+      this.msgList.push(evt.data)  
+    } 
+    this.ws.onclose = () => {
+      console.log('Connection close !!!')
+    }
+  },
+  // 关闭连接 
+  beforeDestroy() {
+    this.ws.close()
+  },
+
+  methods: {
+    send() {
+      this.ws.send(this.msg)
+      //this.ws.send(JSON.stringify({msg: this.msg}))
+      this.msg = ''
+    }
+  },
 }
 </script>
 
@@ -29,5 +63,13 @@ li {
 }
 a {
   color: #42b983;
+}
+input {
+  width: 300px;
+  padding: 5px;
+}
+.btn {
+  margin-left: 10px;
+  cursor: pointer;
 }
 </style>
