@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <input type="text" name="" v-model="sendmsg" placeholder="请输入你想发送的内容">
-    <button class="btn">开挖</button>
+    <button class="btn" @click="send">挖一下</button>
   </div>
 </template>
 
@@ -15,19 +15,18 @@ export default {
   data() {
     return {
       sendmsg: '',
-      ws: {}
+      ws: {},
     }
   },
   mounted() {
-    this.ws = new WebSocket('ws://127.0.0.1:3000/ping')
+    this.ws = new WebSocket('ws://127.0.0.1:3000')
     // 连接打开时触发
     this.ws.onopen = () => {  
       console.log("Connection open ...") 
     }
     // 接收到消息时触发  
-    this.ws.onmessage = (evt) => { 
-      console.log(evt) 
-      this.msgList.push(evt.data)  
+    this.ws.onmessage = (res) => { 
+      this.sendmsg = JSON.parse(res.data).message
     } 
     this.ws.onclose = () => {
       console.log('Connection close !!!')
@@ -40,9 +39,9 @@ export default {
 
   methods: {
     send() {
-      this.ws.send(this.msg)
-      //this.ws.send(JSON.stringify({msg: this.msg}))
-      this.msg = ''
+      //this.ws.send(this.sendmsg)
+      this.ws.send(JSON.stringify({msg: this.sendmsg}))
+      this.sendmsg = ''
     }
   },
 }
