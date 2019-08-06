@@ -12,29 +12,19 @@ export default {
   props: {
     msg: String
   },
+  computed: {
+    ws: function() { return this.$store.state.ws }
+  },
   data() {
     return {
       sendmsg: '',
-      ws: {},
     }
   },
   mounted() {
-    this.ws = new WebSocket('ws://127.0.0.1:3000')
-    // 连接打开时触发
-    this.ws.onopen = () => {  
-      console.log("Connection open ...") 
-    }
     // 接收到消息时触发  
     this.ws.onmessage = (res) => { 
       this.sendmsg = JSON.parse(res.data).message
     } 
-    this.ws.onclose = () => {
-      console.log('Connection close !!!')
-    }
-  },
-  // 关闭连接 
-  beforeDestroy() {
-    this.ws.close()
   },
 
   methods: {
