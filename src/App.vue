@@ -8,6 +8,27 @@
   </div>
 </template>
 
+<script>
+export default {
+  beforeMount() {
+    let ws = new WebSocket('ws://127.0.0.1:3000')
+    this.$store.commit('conn', ws)
+    // 连接打开时触发
+    ws.onopen = () => {  
+      console.log("Connection open ...") 
+    }
+    ws.onclose = () => {
+      console.log('Connection close !!!')
+    }
+  },
+  // 关闭连接 
+  beforeDestroy() {
+    this.$store.state.ws.close()
+  },
+}
+</script>
+
+
 <style lang="less">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
