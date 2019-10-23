@@ -1,8 +1,14 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <input type="text" name="" v-model="sendmsg" placeholder="请输入你想发送的内容">
-    <button class="btn" @click="send">挖一下</button>
+    <div>
+      <input type="text" name="" v-model="sendmsg" placeholder="请输入你想发送的内容">
+      <button class="btn" @click="send">挖一下</button>
+    </div>
+    <div>
+      <input type="text" name="" v-model="nextmsg" placeholder="此处显示上一个区块">
+      <button class="btn" @click="next">上一个</button>
+    </div>
   </div>
 </template>
 
@@ -13,26 +19,38 @@ export default {
     msg: String
   },
   computed: {
-    ws: function() { return this.$store.state.ws }
+    ws: function() { return this.$store.state.ws },
+    ws2: function() { return this.$store.state.ws2 }
   },
   data() {
     return {
       sendmsg: '',
+      nextmsg: ''
     }
   },
   mounted() {
     // 接收到消息时触发  
     this.ws.onmessage = (res) => { 
-      this.sendmsg = JSON.parse(res.data).message
+      console.log(res)
+      this.sendmsg = res.data
+      //this.sendmsg = JSON.parse(res.data).msg
+    } 
+    this.ws2.onmessage = (res) => { 
+      console.log(res)
+      this.nextmsg = res.data
+      //this.sendmsg = JSON.parse(res.data).msg
     } 
   },
 
   methods: {
     send() {
       //this.ws.send(this.sendmsg)
-      this.ws.send(JSON.stringify({msg: this.sendmsg}))
+      this.ws.send(JSON.stringify({code: 101, msg: this.sendmsg}))
       this.sendmsg = ''
-    }
+    },
+    next() {
+      this.ws.send()
+    },
   },
 }
 </script>

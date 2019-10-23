@@ -11,14 +11,20 @@
 <script>
 export default {
   beforeMount() {
-    let ws = new WebSocket('ws://127.0.0.1:3000')
-    this.$store.commit('conn', ws)
-    // 连接打开时触发
-    ws.onopen = () => {  
-      console.log("Connection open ...") 
-    }
-    ws.onclose = () => {
-      console.log('Connection close !!!')
+    if(window.WebSocket) {
+      let ws = new WebSocket('ws://127.0.0.1:3000')
+      let ws2 = new WebSocket('ws://127.0.0.1:3000')
+      this.$store.commit('conn', ws)
+      this.$store.commit('conn2', ws2)
+      // 连接打开时触发
+      ws.onopen = () => {  
+        console.log("Connection open ...") 
+      }
+      ws.onclose = () => {
+        console.log('Connection close !!!')
+      }
+    }else {
+      alert("很抱歉，当前浏览器不支持websocket!")
     }
   },
   // 关闭连接 
@@ -27,7 +33,6 @@ export default {
   },
 }
 </script>
-
 
 <style lang="less">
 #app {
