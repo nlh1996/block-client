@@ -9,6 +9,7 @@
 </template>
 
 <script>
+// import axios from './http/index'
 export default {
   beforeMount() {
     if(window.WebSocket) {

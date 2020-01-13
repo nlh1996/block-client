@@ -72,11 +72,12 @@ axios.interceptors.response.use(response => {
 
 //抽离get,post公共配置
 axios.defaults.baseURL = 'http://localhost:8080/v1'
+//axios.defaults.baseURL = 'http://localhost:8087'
 
 axios.defaults.headers = {
     'X-Requested-With': 'XMLHttpRequest'
 }
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 50000
 
 export default {
     //get请求

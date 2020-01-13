@@ -5,14 +5,16 @@
       <input type="text" name="" v-model="sendmsg" placeholder="请输入你想发送的内容">
       <button class="btn" @click="send">挖一下</button>
     </div>
+
     <div>
       <input type="text" name="" v-model="nextmsg" placeholder="此处显示上一个区块">
-      <button class="btn" @click="next">上一个</button>
+      <button class="btn" @click="next">发日志</button>
     </div>
   </div>
 </template>
 
 <script>
+import Logan from 'logan-web';
 export default {
   name: 'HelloWorld',
   props: {
@@ -25,56 +27,80 @@ export default {
   data() {
     return {
       sendmsg: '',
-      nextmsg: ''
+      nextmsg: '',
     }
+  },
+  beforeMount() {
+    this.initlog()
   },
   mounted() {
     // 接收到消息时触发  
     this.ws.onmessage = (res) => { 
-      console.log(res)
       this.sendmsg = res.data
-      //this.sendmsg = JSON.parse(res.data).msg
+      Logan.log(this.sendmsg, 1);
     } 
     this.ws2.onmessage = (res) => { 
-      console.log(res)
       this.nextmsg = res.data
-      //this.sendmsg = JSON.parse(res.data).msg
     } 
   },
 
   methods: {
+
     send() {
       //this.ws.send(this.sendmsg)
       this.ws.send(JSON.stringify({code: 101, msg: this.sendmsg}))
       this.sendmsg = ''
     },
+
     next() {
-      this.ws.send()
+      this.report()
     },
+
+    initlog() {
+      Logan.initConfig({
+        reportUrl: 'http://localhost:3000/clog',
+        errorHandler: function(e) { console.log(e) }
+      });
+    },
+
+    async report() {
+      const reportResult = await Logan.report({
+        deviceId: 'LocalDeviceIdOrUnionId',
+        fromDayString: '2020-01-13',
+        toDayString: '2020-01-13'
+      });
+      console.log(reportResult);
+    }
   },
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+
 h3 {
   margin: 40px 0 0;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
 }
+
 li {
   display: inline-block;
   margin: 0 10px;
 }
+
 a {
   color: #42b983;
 }
+
 input {
   width: 300px;
   padding: 5px;
 }
+
 .btn {
   margin-left: 10px;
   cursor: pointer;
