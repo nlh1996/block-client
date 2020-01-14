@@ -31,6 +31,7 @@ export default {
   // 关闭连接 
   beforeDestroy() {
     this.$store.state.ws.close()
+    this.$store.state.ws2.close()
   },
 }
 </script>

@@ -37,6 +37,7 @@ export default {
     // 接收到消息时触发  
     this.ws.onmessage = (res) => { 
       this.sendmsg = res.data
+      // 存日志
       Logan.log(this.sendmsg, 1);
     } 
     this.ws2.onmessage = (res) => { 
@@ -45,7 +46,6 @@ export default {
   },
 
   methods: {
-
     send() {
       //this.ws.send(this.sendmsg)
       this.ws.send(JSON.stringify({code: 101, msg: this.sendmsg}))
@@ -63,13 +63,25 @@ export default {
       });
     },
 
+    // 发送日志,记得改时间
     async report() {
+      let date = new Date()
+      let y = date.getFullYear()
+      let m = date.getMonth() + 1
+      if(m < 10){
+        m = '0' + m
+      }
+      var d = date.getDate()
+      if(d < 10){
+        d = '0' + d
+      }
+      date = y + '-' + m + '-' + d
       const reportResult = await Logan.report({
         deviceId: 'LocalDeviceIdOrUnionId',
-        fromDayString: '2020-01-13',
-        toDayString: '2020-01-13'
-      });
-      console.log(reportResult);
+        fromDayString: date,
+        toDayString: date
+      })
+      console.log(reportResult)
     }
   },
 }
