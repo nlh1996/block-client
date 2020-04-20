@@ -11,7 +11,6 @@
     </div>
 
     <div>
-      <input type="text" name="" v-model="nextmsg" placeholder="此处显示上一个区块">
       <button class="btn" @click="next">发日志</button>
     </div>
   </div>
@@ -41,7 +40,7 @@ export default {
   mounted() {
     // 接收到消息时触发  
     this.ws.onmessage = (res) => { 
-      console.log(JSON.parse(res.data).data.arr)
+      console.log(JSON.parse(res.data))
       this.receive = res.data
       // 存日志
       Logan.log(this.receive, 1);
