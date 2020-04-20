@@ -5,6 +5,10 @@
       <input type="text" name="" v-model="sendmsg" placeholder="请输入你想发送的内容">
       <button class="btn" @click="send">挖一下</button>
     </div>
+    <div style="margin-left:14px">
+      <input type="text" name="" v-model="receive" placeholder="此处接收返回信息">
+      <button class="btn">返回显示</button>
+    </div>
 
     <div>
       <input type="text" name="" v-model="nextmsg" placeholder="此处显示上一个区块">
@@ -28,6 +32,7 @@ export default {
     return {
       sendmsg: '',
       nextmsg: '',
+      receive: ''
     }
   },
   beforeMount() {
@@ -36,9 +41,10 @@ export default {
   mounted() {
     // 接收到消息时触发  
     this.ws.onmessage = (res) => { 
-      this.sendmsg = res.data
+      console.log(JSON.parse(res.data).data.arr)
+      this.receive = res.data
       // 存日志
-      Logan.log(this.sendmsg, 1);
+      Logan.log(this.receive, 1);
     } 
     this.ws2.onmessage = (res) => { 
       this.nextmsg = res.data
@@ -48,7 +54,7 @@ export default {
   methods: {
     send() {
       //this.ws.send(this.sendmsg)
-      this.ws.send(JSON.stringify({code: 101, msg: this.sendmsg}))
+      this.ws.send(JSON.stringify({id: 101, data: {msg: this.sendmsg, cc: 111}}))
       this.sendmsg = ''
     },
 
